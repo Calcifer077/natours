@@ -1,0 +1,51 @@
+//- What is extending? -> It means to redfine a page by using another page. In this case we are extending 'base.pug' only written as 'base'. It means that there is a block in 'base.pug' which will be overwritten by this file, by the content in this file.
+//- One file can only extend one another file.
+extends base
+
+block content
+
+    main.main 
+        .card-container
+            
+            //- This is used to loop
+            each tour in tours
+                .card
+                    .card__header   
+                        .card__picture 
+                            .card__picture-overlay &nbsp;
+                            img.card__picture-img(src=`/img/tours/${tour.imageCover}` alt=`${tour.name}`)
+                        h3.heading-tertirary    
+                            span= tour.name
+
+                    .card__details 
+                        h4.card__sub-heading= `${tour.difficulty} ${tour.duration}-day tour`
+                        p.card__text= tour.summary
+                        .card__data 
+                            svg.card__icon 
+                                use(xlink:href='/img/icons.svg#icon-map-pin')
+                            span= tour.startLocation.description 
+                        .card__data 
+                            svg.card__icon
+                                use(xlink:href='/img/icons.svg#icon-calendar')
+                            //- Below code is used to format dates
+                            span= tour.startDates[0].toLocaleString('en-us', {month: 'long', year:'numeric'})
+                        .card__data 
+                            svg.card__icon  
+                                use(xlink:href='/img/icons.svg#icon-flag')
+                            span= `${tour.locations.length} stops`
+                        .card__data 
+                            svg.card__icon 
+                                use(xlink:href='/img/icons.svg#icon-user')
+                            span= `${tour.maxGroupSize} people`
+                            
+                    .card__footer 
+                        p
+                            span.card__footer-value= `$${tour.price}`
+                            | 
+                            span.card__footer-text per person
+                        p.card__ratings 
+                            span.card__footer-value= tour.ratingsAverage
+                            | 
+                            span.card__footer-text= `rating (${tour.ratingsQuantity})`
+
+                        a.btn.btn--green.btn--small(href=`/tour/${tour.slug}`) Details

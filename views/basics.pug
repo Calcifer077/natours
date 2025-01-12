@@ -1,0 +1,24 @@
+//- Pug is a simple whitespace sensitive syntax for writing html
+
+doctype html 
+html    
+    head 
+        //- We are doing it in this way because there is also simple text or html in the same line.
+        title Natours | #{tour}
+
+        //- <link rel="stylesheet" href="css/style.css" />
+        //- Why does the css file get loaded automatically from the css folder?
+        //- Each of these assets actually triggers its own http request. So we are basically sending these files to the browser. We have a middleware in 'app.js' which is used to serve static files, it means that all the static files will be automatically sent from a certain folder which is 'public' in this case.
+        link(rel='stylesheet' href='css/style.css')
+        link(rel='shortcut icon' type='image/png' href='img/favicon.png')
+
+    body
+        //- Here, 'tour' is data coming from 'app.js'. It is known as local in pug
+        //- Below is buffered code meaning that the code will be executed and the results are sent to the output buffer
+        h1= tour 
+        h2= user.toUpperCase()
+
+        //- unbuffered code -> which is not going to do anything to the code
+        - const x = 9;
+        h2= 2 * x
+        p This is just some text

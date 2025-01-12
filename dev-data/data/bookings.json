@@ -1,0 +1,17 @@
+[{
+  "_id": {
+    "$oid": "66c07c02809667ecbc76c0d3"
+  },
+  "createdAt": {
+    "$date": "2024-08-17T10:30:30.093Z"
+  },
+  "paid": true,
+  "tour": {
+    "$oid": "5c88fa8cf4afda39709c2970"
+  },
+  "user": {
+    "$oid": "66b7a227250e36c2b4b2f04b"
+  },
+  "price": 2997,
+  "__v": 0
+}]

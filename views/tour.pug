@@ -1,0 +1,113 @@
+extends base
+
+include _reviewCard
+
+block append head
+    link(rel='stylesheet' href='https://unpkg.com/leaflet@1.8.0/dist/leaflet.css'
+    integrity='sha512-hoalWLoI8r4UszCkZ5kL8vayOGVae1oxXe/2A4AO6J9+580uKHDO3JdHb7NzwwzK5xr/Fs0W40kiNHxM9vyTtQ==' crossorigin='')
+    script(src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js" integrity="sha512-BB3hKbKWOc9EzTAwyWxNXeoV9c1v6FIeYiBieIWkpLjauysF18NzgR1MBNBXf8/KABdlkX68nAhlwcDFLGPCQ=="
+    crossorigin="") 
+    //- script(src='https://js.stripe.com/v3/')
+
+    
+
+    //- script(src='/js/mapbox.js')
+
+//- Here we are basically creating mixin which is like function that contains some reusable code.
+mixin overviewBox(label, text, icon)
+    .overview-box__detail
+        svg.overview-box__icon
+            use(xlink:href=`/img/icons.svg#icon-${icon}`)
+        span.overview-box__label= label
+        span.overview-box__text= text
+
+block content
+    section.section-header
+        .header__hero
+            .header__hero-overlay &nbsp;
+            img.header__hero-img(src=`/img/tours/${tour.imageCover}`, alt=`${tour.name}`)
+
+        .heading-box
+            h1.heading-primary
+                span= `${tour.name} Tour`
+            .heading-box__group
+                .heading-box__detail
+                    svg.heading-box__icon
+                        use(xlink:href='/img/icons.svg#icon-clock')
+                    span.heading-box__text= `${tour.duratin} days`
+                .heading-box__detail
+                    svg.heading-box__icon
+                        use(xlink:href='/img/icons.svg#icon-map-pin')
+                    span.heading-box__text= tour.startLocation.description
+
+    section.section-description
+        .overview-box
+            div
+            .overview-box__group
+                h2.heading-secondary.ma-bt-lg Quick facts
+
+                //- This is a way of using JS code inside pug. It will not be rendered
+                - const date = tour.startDates[0].toLocaleString('en-us', {month: 'long', year:'numeric'})
+                +overviewBox('Next date', date, 'calendar')
+                +overviewBox('Difficulty', tour.difficulty, 'trending-up')
+                +overviewBox('Participants', `${tour.maxGroupSize} people`, 'user')
+                +overviewBox('Rating', `${tour.ratingsAverage} / 5`, 'star')
+
+            .overview-box__group
+                h2.heading-secondary.ma-bt-lg Your tour guides
+                //- Loop
+                each guide in tour.guides 
+                    .overview-box__detail
+                        img.overview-box__img(src=`/img/users/${guide.photo}`, alt=`${guide.name}`)
+
+                        - if(guide.role === 'lead-guide')
+                            span.overview-box__label Lead guide
+                        - if(guide.role === 'guide')
+                            span.overview-box__label Tour guide
+                        span.overview-box__text= guide.name
+
+        .description-box
+            h2.heading-secondary.ma-bt-lg= `About ${tour.name} tour`
+
+            - const paragraphs = tour.description.split('\n');
+
+            each p in paragraphs
+                p.description__text= p
+
+
+
+    section.section-pictures
+        //- Here, 'i' is index starting from 0.
+        each img, i in tour.images
+            .picture-box
+                img.picture-box__img(src=`/img/tours/${img}`, alt=`${tour.name} Tour ${i + 1}`, class=`picture-box__img--${i + 1}`)
+
+
+    section.section-map
+        //- Here, we are setting a data attribute. This data attribute will be attached to the HTML of the web page so that our JS(mapbox.js) can easily access it. HTML can only contain strings so we converted it to string using 'JSON.stringify'
+        #map(data-locations=`${JSON.stringify(tour.locations)}`)
+        .bindPopup(`<p>Day ${loc.day}: ${loc.       description}</p>`, {
+        autoClose: false,
+        className: 'mapPopup',
+        })
+
+    section.section-reviews
+        .reviews
+            each review in tour.reviews
+                +reviewCard(review)
+
+        section.section-cta
+            .cta
+                .cta__img.cta__img--logo
+                    img(src='/img/logo-white.png', alt='Natours logo')
+                img.cta__img.cta__img--1(src=`/img/tours/${tour.images[1]}`, alt='')
+                img.cta__img.cta__img--2(src=`/img/tours/${tour.images[2]}`, alt='')
+                .cta__content
+                    h2.heading-secondary What are you waiting for?
+                    p.cta__text= `${tour.duration} days. 1 adventure. Infinite memories. Make it yours today!` 
+
+                    if user
+                        //- Here, we are giving a data attribute that can be sent to the backend(route checkout-session) so that it can be used there
+                        button.btn.btn--green.span-all-rows#book-tour(data-tour-id=`${tour.id}`) Book tour now!
+                    else 
+                        a.btn.btn--green.span-all-rows(href='/login') Log in to book tour

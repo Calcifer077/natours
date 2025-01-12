@@ -1,0 +1,7 @@
+middlewares from models.
+
+pug includes, extends   
+
+setting routes for pug
+
+buffered and unbuffered code in pug

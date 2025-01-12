@@ -1,0 +1,49 @@
+geospatial data -> is basically data that describes places on earth using longitude and latitude coordinates. We can describe simple points or complex points like polygens. it comes out of the box with mongodb and mongoose. It uses a special format for it known as 'GEOJSON'
+
+we have created embedded or denormalized data sets(data sets that have a really close relationship with their parent data 'tours' in this case.) in tours data using tour schema. There are objects inside objects with object ID
+
+populate -> mongoose feature. In this we get document from one collection to another collection. It is basically querying two times. If you have a very big application don't use it.
+
+mergeParams
+
+class in pug -> for specifying class in pug all you have to do is use '.' for example: header.header (<header class="header")></header>
+
+you don't have to write 'div' in pug to create a div just simply '.header__logo' which means <div class='header__logo'></div>
+
+how to include files in 'base.pug' which is the main file from where all things related to pug start
+create seperate file for different componenets like header and footer with extension of pug
+then simply write include <filename> in your main pug file
+
+What is extending in pug? -> It means to redfine a page by using another page. Suppose there is a parent file named 'base.pug' and other file named 'overview.pug'. 'base.pug' have the starting material which is common to all the pages of the website like header and footer. 'overview.pug' has some special things related to a particular page. So we can redfine the 'base.pug' file by 'overview.pug' meaning that everything else will be the same only the things which we have written in 'overview.pug' will be updated.
+How to do it? base is parent file which have a block namely content which can be overwritten by some other file.
+extends base
+block content
+
+when we are extending a block, it usually rewrites that entire block. But we can also do so that it writes after or before the content that is already in there by using append(after the content that is already in there) and prepend(before the content that is already in there). append and prepend are written in the file which is extending another file
+example: block append head
+
+If we want to create empty space between elements in pug then we have to use '|' and add extra space after it.
+
+mixins in pug -> these are basically reusable piece of code to whom you can pass argument to. This are like function.
+You have to define them outside of normal code
+syntax : 
+mixin mixinName(mixinArguments)
+    pug code
+    You can use your arguments just as you would in normal pug
+example:
+mixin overviewBox(label, text, icon)
+    .overview-box__detail
+        svg.overview-box__icon
+            use(xlink:href=`/img/icons.svg#icon-${icon}`)
+        span.overview-box__label= label
+        span.overview-box__text= text
+How to use it in pug code
+    use '+' opertor before the name of mixinName where you want to use it.
+    example: +overviewBox('Next date', date, 'calendar')
+
+How to use JS in pug?
+Use '-'. everything after '-' will not be rendered but you can still use it. Suppose you have a variable declared in here. You can still use this variable anywhere else.
+
+multer is a middleware for handling multi-form data like images.
+
+sharp is used for image processing
